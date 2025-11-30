@@ -1,0 +1,111 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.loading {
+  width: 40px;
+  height: 40px;
+  animation: rotator 1.6s linear 0.35s infinite;
+}
+
+@keyframes rotator {
+  0% {
+    transform: rotate(-90deg);
+  }
+
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+.loading circle {
+  stroke-dasharray: 114;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  stroke: #2860d8;
+  animation:
+    spin-fade-in 0.4s ease-in-out,
+    spin-dash 1.6s ease-in-out 0.35s infinite;
+}
+
+@keyframes spin-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  87.5% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes spin-dash {
+  0% {
+    stroke-dashoffset: 111;
+  }
+
+  50% {
+    stroke-dashoffset: 28.5;
+    transform: rotate(135deg);
+  }
+
+  100% {
+    stroke-dashoffset: 111;
+    transform: rotate(450deg);
+  }
+}
+/** ローディング関係以外 **/
+.hidden {
+  display: none;
+}
+
+button.next {
+  padding: 8px 20px;
+  font-size: 20px;
+  min-width: 160px;
+  border-radius: 6px;
+  border: none;
+  background-color: #2860d8;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button.reset {
+  padding: 8px 20px;
+  font-size: 14px;
+  min-width: 160px;
+  border-radius: 6px;
+  border: none;
+  background-color: transparent;
+  color: #2860d8;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.content {
+  text-align: center;
+  font-size: 14px;
+}
+.content .main {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.error-content {
+  text-align: center;
+}
+.error-content .error-message {
+  font-size: 24px;
+  color: red;
+}
