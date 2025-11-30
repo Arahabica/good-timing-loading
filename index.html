@@ -1,129 +1,189 @@
 <html>
 
 <head>
-   <link rel="stylesheet" href="./index.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./index.css" />
+  <title>Good Timing Loading</title>
 </head>
 
 <body>
-   <button class="next">次へ</button>
-   <svg class="loading hidden" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-      <circle fill="none" stroke-width="4" cx="20" cy="20" r="18"></circle>
-   </svg>
-   <div class="content hidden">
-      <div class="main">Hello</div>
-      <div>loaded: <span class="loading-time"></span> ms</div>
-      <button class="reset">リセット</button>
-   </div>
-   <div class="error-content hidden">
-      <div class="error-message">Something went wrong!</div>
-      <div>loaded: <span class="loading-time"></span> ms</div>
-      <button class="reset">リセット</button>
-   </div>
+  <div class="landing">
+    <fieldset>
+      <div class="title">処理時間</div>
+      <span id="progressTimeValue">500</span>
+      <span>ms</span>
+      <div class="controls">
+        <button id="progressTimeUp">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 32 L20 8 L40 32" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+        <button id="progressTimeDown">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 8 L20 32 L40 8" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="title">delay</div>
+      <span id="delayValue">350</span>
+      <span>ms</span>
+      <div class="controls">
+        <button id="delayUp">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 32 L20 8 L40 32" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+        <button id="delayDown">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 8 L20 32 L40 8" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="title">minTime</div>
+      <span id="minTimeValue">600</span>
+      <span>ms</span>
+      <div class="controls">
+        <button id="minTimeUp">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 32 L20 8 L40 32" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+        <button id="minTimeDown">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 8 L20 32 L40 8" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+      </div>
+    </fieldset>
+    <button class="next">次へ</button>
+  </div>
+  <svg class="loading hidden" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <circle fill="none" stroke-width="4" cx="20" cy="20" r="18"></circle>
+  </svg>
+  <div class="content hidden">
+    <div class="main">Hello</div>
+    <div>loaded: <span class="loading-time"></span> ms</div>
+    <button class="reset">リセット</button>
+  </div>
+  <div class="error-content hidden">
+    <div class="error-message">Something went wrong!</div>
+    <div>loaded: <span class="loading-time"></span> ms</div>
+    <button class="reset">リセット</button>
+  </div>
 </body>
 <script>
-const waitLoadingAnimation = async(callback, opts) => {
-  const delay = opts?.delay ?? 350; // ドーハティ閾値(400ms) - バッファ(50ms)
-  const minDuration = opts?.minDuration ?? 600; // 最小表示時間
-  // Delayを超えた場合に強制される合計の最小待ち時間
-  const requiredWaitTime = delay + minDuration; // 950ms
+  const waitLoadingAnimation = async (callback, opts) => {
+    const delay = opts?.delay ?? 350; // ドーハティ閾値(400ms) - バッファ(50ms)
+    const minDuration = opts?.minDuration ?? 600; // 最小表示時間
+    // Delayを超えた場合に強制される合計の最小待ち時間
+    const requiredWaitTime = delay + minDuration; // 950ms
 
-  const startTime = Date.now();
+    const startTime = Date.now();
 
-  // 1. コールバック関数を即座に実行
-  const callbackPromise = callback();
+    // 1. コールバック関数を即座に実行
+    const callbackPromise = callback();
 
-  try {
-   // 2. 処理の完了を待機
-   const result = await callbackPromise;
-   const finishedTime = Date.now();
-   const actualTime = finishedTime - startTime;
+    try {
+      // 2. 処理の完了を待機
+      const result = await callbackPromise;
+      const finishedTime = Date.now();
+      const actualTime = finishedTime - startTime;
 
-   // 3. Min Durationの適用判定
-   if (actualTime < delay) {
-     // delay以内に完了した場合は即座に結果を返す (ノイズレス)
-     return result;
-   }
-   // 処理時間がDelayを超えた場合、ローディングが表示されたとみなし、
-   // Min Durationのルールを適用する。
-   const remainingTime = Math.max(requiredWaitTime - actualTime, 0);
+      // 3. Min Durationの適用判定
+      if (actualTime < delay) {
+        // delay以内に完了した場合は即座に結果を返す (ノイズレス)
+        return result;
+      }
+      // 処理時間がDelayを超えた場合、ローディングが表示されたとみなし、
+      // Min Durationのルールを適用する。
+      const remainingTime = Math.max(requiredWaitTime - actualTime, 0);
 
-   // 4. 不足している時間分だけ人工的に待機
-   if (remainingTime > 0) {
-     console.log("Waiting for min duration:", remainingTime);
-     // Promiseが解決したにも関わらず、ローディング表示を維持する
-     await new Promise((resolve) => {
-        setTimeout(resolve, remainingTime);
-     });
-   }
-    return result;
-  } catch (error) {
-    // エラー時も同様にMin Durationのルールを適用し、チラつきを防ぐ
-    const errorTime = Date.now();
-    const actualErrorTime = errorTime - startTime;
-
-    if (actualErrorTime > delay) {
-      const remainingTime = Math.max(requiredWaitTime - actualErrorTime, 0);
+      // 4. 不足している時間分だけ人工的に待機
       if (remainingTime > 0) {
         console.log("Waiting for min duration:", remainingTime);
+        // Promiseが解決したにも関わらず、ローディング表示を維持する
         await new Promise((resolve) => {
           setTimeout(resolve, remainingTime);
         });
       }
+      return result;
+    } catch (error) {
+      // エラー時も同様にMin Durationのルールを適用し、チラつきを防ぐ
+      const errorTime = Date.now();
+      const actualErrorTime = errorTime - startTime;
+
+      if (actualErrorTime > delay) {
+        const remainingTime = Math.max(requiredWaitTime - actualErrorTime, 0);
+        if (remainingTime > 0) {
+          console.log("Waiting for min duration:", remainingTime);
+          await new Promise((resolve) => {
+            setTimeout(resolve, remainingTime);
+          });
+        }
+      }
+      // 待機完了後にエラーをスロー
+      throw error;
     }
-    // 待機完了後にエラーをスロー
-    throw error;
-  }
-};
+  };
 
-const nextButton = document.querySelector(".next");
-const loading = document.querySelector(".loading");
-const content = document.querySelector(".content");
-const errorContent = document.querySelector(".error-content");
-const resetButton = document.querySelectorAll(".reset");
+  let progressTime = 500;
+  let delay = 350;
+  let minTime = 600;
 
-function setHidden(element, hidden) {
-   if (hidden) {
+  const landing = document.querySelector(".landing");
+  const loading = document.querySelector(".loading");
+  const content = document.querySelector(".content");
+  const errorContent = document.querySelector(".error-content");
+  const nextButton = document.querySelector(".next");
+  const resetButton = document.querySelectorAll(".reset");
+
+  function setHidden(element, hidden) {
+    if (hidden) {
       element.classList.add("hidden");
-   } else {
+    } else {
       element.classList.remove("hidden");
-   }
-}
-function changeState(mode) {
-   setHidden(nextButton, mode !== "none");
-   setHidden(loading, mode !== "loading");
-   setHidden(content, mode !== "loaded");
-   setHidden(errorContent, mode !== "error");
-}
-async function doSomething(duration) {
-   return new Promise((resolve, reject) => {
+    }
+  }
+  function setState(mode) {
+    setHidden(landing, mode !== "none");
+    setHidden(loading, mode !== "loading");
+    setHidden(content, mode !== "loaded");
+    setHidden(errorContent, mode !== "error");
+  }
+  async function doSomething() {
+    // 0〜1200msの間でランダムに待機
+    const duration = Math.floor(24 * Math.random()) * 50;
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-         if (Math.random() < 0.2) {
-            // 20%の確率でエラーをスロー
-            reject(new Error("Something went wrong!"));
-         }
-         resolve(duration);
+        if (Math.random() < 0.2) {
+          // 20%の確率でエラーをスロー
+          reject(new Error("Something went wrong!"));
+        }
+        resolve(duration);
       }, duration);
-   });
-}
+    });
+  }
 
-nextButton.addEventListener("click", async () => {
-   changeState("loading");
-   // 0〜1200msの間でランダムに待機
-   const duration = Math.floor(24 * Math.random()) * 50;
-   try {
-     await waitLoadingAnimation(() => doSomething(duration));
-     content.querySelector(".loading-time").textContent = duration.toFixed(0);
-     changeState("loaded");
-   } catch (error) {
-      errorContent.querySelector(".loading-time").textContent = duration.toFixed(0);
-      changeState("error");
-      return;
-   }
-});
-resetButton.forEach(button => {
-   button.addEventListener("click", () => {
-      changeState("none");
-   });
-});
+  nextButton.addEventListener("click", async () => {
+    setState("loading");
+    try {
+      const duration = await waitLoadingAnimation(() => doSomething());
+      content.querySelector(".loading-time").textContent = duration.toFixed(0);
+      setState("loaded");
+    } catch (error) {
+      setState("error");
+    }
+  });
+  resetButton.forEach(button => {
+    button.addEventListener("click", () => {
+      setState("none");
+    });
+  });
 </script>
+
 </html>

@@ -59,3 +59,30 @@
 
 (これから)
 (TypeScriptの実装例)
+
+```js
+async function doSomething() {
+   // 0〜1200msの間でランダムに待機
+   const duration = Math.floor(24 * Math.random()) * 50;
+   return new Promise((resolve, reject) => {
+      setTimeout(() => {
+         if (Math.random() < 0.2) {
+            // 20%の確率でエラーをスロー
+            reject(new Error("Something went wrong!"));
+         }
+         resolve(duration);
+      }, duration);
+   });
+}
+
+nextButton.addEventListener("click", async () => {
+   changeState("loading");
+   try {
+     await waitLoadingAnimation(() => doSomething());
+     content.querySelector(".loading-time").textContent = duration.toFixed(0);
+     changeState("loaded");
+   } catch (error) {
+      changeState("error");
+   }
+});
+```

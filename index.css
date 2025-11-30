@@ -18,11 +18,11 @@ body {
 
 @keyframes rotator {
   0% {
-    transform: rotate(-90deg);
+    transform: rotate(270deg);
   }
 
   100% {
-    transform: rotate(180deg);
+    transform: rotate(540deg);
   }
 }
 
@@ -66,12 +66,53 @@ body {
   }
 }
 /** ローディング関係以外 **/
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
 .hidden {
   display: none;
 }
 
+fieldset {
+  display: flex;
+  gap: 4px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+fieldset .title {
+  width: 90px;
+}
+fieldset .controls {
+  margin-left: 12px;
+}
+
+
+fieldset button {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  width: 24px;
+  height: 18px;
+  border-radius: 12px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+fieldset button svg {
+  width: 12px;
+  height: 12px;
+}
+
 button.next {
   padding: 8px 20px;
+  margin-top: 24px;
   font-size: 20px;
   min-width: 160px;
   border-radius: 6px;
