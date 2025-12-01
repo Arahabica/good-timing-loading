@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./index.css" />
-  <link rel="stylesheet" href="./playground.css" />
+  <link rel="stylesheet" href="./playground.css?x=7" />
   <title>Playground | Good Timing Loading</title>
 </head>
 
@@ -49,18 +48,18 @@
       </div>
     </fieldset>
     <fieldset>
-      <div class="title">minTime</div>
+      <div class="title">minDuration</div>
       <div class="value">
-        <span id="minTimeValue">600</span>
+        <span id="minDurationValue">600</span>
         <span>ms</span>
       </div>
       <div class="controls">
-        <button id="minTimeDown">
+        <button id="minDurationDown">
           <svg viewBox="0 0 40 40">
             <path d="M0 8 L20 32 L40 8" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
         </button>
-        <button id="minTimeUp">
+        <button id="minDurationUp">
           <svg viewBox="0 0 40 40">
             <path d="M0 32 L21 7 L40 32" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
@@ -80,7 +79,7 @@
         </button>
       </div>
     </fieldset>
-    <button class="next">次へ</button>
+    <button class="next" style="margin-top: 36px;">次へ</button>
     <div style="margin-top: 60px;">
       <a href="./index.html">Simple</a>
     </div>
@@ -159,7 +158,7 @@
 
   let progressTime = 500;
   let delay = 350;
-  let minTime = 600;
+  let minDuration = 600;
   let flickerAgainst = true;
 
   const landing = document.querySelector(".landing");
@@ -176,31 +175,29 @@
       element.classList.remove("hidden");
     }
   }
-  function setState(mode) {
-    setHidden(landing, mode !== "none");
-    setHidden(loading, mode !== "loading");
-    setHidden(content, mode !== "loaded");
-    setHidden(errorContent, mode !== "error");
+  function setState(state) {
+    setHidden(landing, state !== "none");
+    setHidden(loading, state !== "loading");
+    setHidden(content, state !== "loaded");
+    setHidden(errorContent, state !== "error");
   }
   async function doSomething() {
-    // 0〜1200msの間でランダムに待機
-    const duration = Math.floor(24 * Math.random()) * 50;
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (Math.random() < 0.2) {
-          // 20%の確率でエラーをスロー
+        if (Math.random() < 0.02) {
+          // 2%の確率でエラーをスロー
           reject(new Error("Something went wrong!"));
         }
-        resolve(duration);
-      }, duration);
+        resolve();
+      }, progressTime);
     });
   }
 
   nextButton.addEventListener("click", async () => {
     setState("loading");
     try {
-      const duration = await waitLoadingAnimation(() => doSomething());
-      content.querySelector(".loading-time").textContent = duration.toFixed(0);
+      await waitLoadingAnimation(() => doSomething(), { delay, minDuration });
+      content.querySelector(".loading-time").textContent = progressTime.toFixed(0);
       setState("loaded");
     } catch (error) {
       setState("error");
@@ -298,22 +295,39 @@
     downButton: document.getElementById("delayDown"),
     valueElement: document.getElementById("delayValue"),
     getValue: () => delay,
-    setValue: (v) => { delay = v; },
+    setValue: (v) => {
+      delay = v;
+      loading.style.animation = `rotator 1.6s linear ${delay}ms infinite`;
+      const circle = loading.querySelector("circle");
+      circle.style.animation = `
+        spin-hidden ${delay}ms ease-in-out,
+        spin-fade-in 0.05s ease-in-out ${delay}ms forwards,
+        spin-dash 1.6s ease-in-out ${delay}ms infinite
+      `;
+    },
     min: 0,
     max: 5000,
     step: 50
   });
 
-  // minTime controls
+  // minDuration controls
   setupNumberControl({
-    upButton: document.getElementById("minTimeUp"),
-    downButton: document.getElementById("minTimeDown"),
-    valueElement: document.getElementById("minTimeValue"),
-    getValue: () => minTime,
-    setValue: (v) => { minTime = v; },
+    upButton: document.getElementById("minDurationUp"),
+    downButton: document.getElementById("minDurationDown"),
+    valueElement: document.getElementById("minDurationValue"),
+    getValue: () => minDuration,
+    setValue: (v) => { minDuration = v; },
     min: 0,
     max: 5000,
     step: 50
+  });
+
+  const flickerAgainstButton = document.getElementById("flickerAgainst");
+  const flickerAgainstValue = document.getElementById("flickerAgainstValue");
+  flickerAgainstButton.addEventListener("click", () => {
+    flickerAgainst = !flickerAgainst;
+    flickerAgainstValue.textContent = flickerAgainst ? "ON" : "OFF";
+    flickerAgainstButton.classList.toggle("off", !flickerAgainst);
   });
 </script>
 
