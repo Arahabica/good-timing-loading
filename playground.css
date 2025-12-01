@@ -15,10 +15,17 @@ fieldset {
 }
 
 fieldset .title {
-  width: 90px;
+  width: 100px;
+  text-align: right;
+}
+fieldset .value {
+  width: 75px;
+  text-align: right;
 }
 fieldset .controls {
-  margin-left: 12px;
+  display: flex;
+  width: 60px;
+  justify-content: end;
 }
 
 
@@ -28,9 +35,10 @@ fieldset button {
   margin: 0;
   border: none;
   width: 24px;
-  height: 18px;
+  height: 24px;
   border-radius: 12px;
   background-color: transparent;
+  color: #444444;
   cursor: pointer;
 }
 
@@ -38,7 +46,39 @@ fieldset button svg {
   width: 12px;
   height: 12px;
 }
+fieldset button:hover {
+  background-color: #f0f0f0;
+}
 
-.controls {
-  display: flex;
+fieldset button:disabled {
+  color: #dadada;
+}
+
+button.check svg {
+  color: #444444;
+}
+
+button.check.off svg {
+  color: #dadada;
+}
+
+.normal-loading {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 4px solid #2860d8;
+  border-top-color: transparent;
+  animation:
+    rotatation 1s linear infinite,
+    fade-in 1s linear;
+}
+
+@keyframes rotatation {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

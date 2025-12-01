@@ -12,51 +12,70 @@
   <section class="landing">
     <fieldset>
       <div class="title">処理時間</div>
-      <span id="progressTimeValue">500</span>
-      <span>ms</span>
+      <div class="value">
+        <span id="progressTimeValue">500</span>
+        <span>ms</span>
+      </div>
       <div class="controls">
-        <button id="progressTimeUp">
-          <svg viewBox="0 0 40 40">
-            <path d="M0 32 L20 8 L40 32" stroke="#444444" fill="none" stroke-width="3" />
-          </svg>
-        </button>
         <button id="progressTimeDown">
           <svg viewBox="0 0 40 40">
-            <path d="M0 8 L20 32 L40 8" stroke="#444444" fill="none" stroke-width="3" />
+            <path d="M0 8 L20 32 L40 8" stroke="currentColor" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+        <button id="progressTimeUp">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 32 L20 8 L40 32" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
         </button>
       </div>
     </fieldset>
     <fieldset>
       <div class="title">delay</div>
-      <span id="delayValue">350</span>
-      <span>ms</span>
+      <div class="value">
+        <span id="delayValue">350</span>
+        <span>ms</span>
+      </div>
       <div class="controls">
-        <button id="delayUp">
-          <svg viewBox="0 0 40 40">
-            <path d="M0 32 L20 8 L40 32" stroke="#444444" fill="none" stroke-width="3" />
-          </svg>
-        </button>
         <button id="delayDown">
           <svg viewBox="0 0 40 40">
-            <path d="M0 8 L20 32 L40 8" stroke="#444444" fill="none" stroke-width="3" />
+            <path d="M0 8 L20 32 L40 8" stroke="currentColor" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+        <button id="delayUp">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 32 L20 8 L40 32" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
         </button>
       </div>
     </fieldset>
     <fieldset>
       <div class="title">minTime</div>
-      <span id="minTimeValue">600</span>
-      <span>ms</span>
+      <div class="value">
+        <span id="minTimeValue">600</span>
+        <span>ms</span>
+      </div>
       <div class="controls">
-        <button id="minTimeUp">
-          <svg viewBox="0 0 40 40">
-            <path d="M0 32 L20 8 L40 32" stroke="#444444" fill="none" stroke-width="3" />
-          </svg>
-        </button>
         <button id="minTimeDown">
           <svg viewBox="0 0 40 40">
-            <path d="M0 8 L20 32 L40 8" stroke="#444444" fill="none" stroke-width="3" />
+            <path d="M0 8 L20 32 L40 8" stroke="currentColor" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+        <button id="minTimeUp">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 32 L21 7 L40 32" stroke="currentColor" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="title">ちらつき対策</div>
+      <div class="value">
+        <span id="flickerAgainstValue">ON</span>
+      </div>
+      <div class="controls">
+        <button id="flickerAgainst" class="check">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 9 L12 30 L40 4" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
         </button>
       </div>
@@ -67,6 +86,9 @@
     </div>
   </section>
   <svg class="loading hidden" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <circle fill="none" stroke-width="4" cx="20" cy="20" r="18"></circle>
+  </svg>
+  <svg class="normal-loading hidden" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
     <circle fill="none" stroke-width="4" cx="20" cy="20" r="18"></circle>
   </svg>
   <section class="content hidden">
@@ -138,6 +160,7 @@
   let progressTime = 500;
   let delay = 350;
   let minTime = 600;
+  let flickerAgainst = true;
 
   const landing = document.querySelector(".landing");
   const loading = document.querySelector(".loading");
@@ -188,6 +211,66 @@
       setState("none");
     });
   });
+
+  // delay controls
+  const delayUp = document.getElementById("delayUp");
+  const delayDown = document.getElementById("delayDown");
+  const delayValueEl = document.getElementById("delayValue");
+  let delayIntervalId = null;
+
+  function updateDelayButtons() {
+    delayUp.disabled = delay >= 5000;
+    delayDown.disabled = delay <= 0;
+  }
+
+  function incrementDelay() {
+    if (delay < 5000) {
+      delay = Math.min(delay + 50, 5000);
+      delayValueEl.textContent = delay;
+      updateDelayButtons();
+    }
+  }
+
+  function decrementDelay() {
+    if (delay > 0) {
+      delay = Math.max(delay - 50, 0);
+      delayValueEl.textContent = delay;
+      updateDelayButtons();
+    }
+  }
+
+  let delayTimeoutId = null;
+
+  function stopDelayInterval() {
+    if (delayTimeoutId) {
+      clearTimeout(delayTimeoutId);
+      delayTimeoutId = null;
+    }
+    if (delayIntervalId) {
+      clearInterval(delayIntervalId);
+      delayIntervalId = null;
+    }
+  }
+
+  delayUp.addEventListener("click", incrementDelay);
+  delayUp.addEventListener("mousedown", () => {
+    delayTimeoutId = setTimeout(() => {
+      delayIntervalId = setInterval(incrementDelay, 50);
+    }, 350);
+  });
+  delayUp.addEventListener("mouseup", stopDelayInterval);
+  delayUp.addEventListener("mouseleave", stopDelayInterval);
+
+  delayDown.addEventListener("click", decrementDelay);
+  delayDown.addEventListener("mousedown", () => {
+    delayTimeoutId = setTimeout(() => {
+      delayIntervalId = setInterval(decrementDelay, 50);
+    }, 350);
+  });
+  delayDown.addEventListener("mouseup", stopDelayInterval);
+  delayDown.addEventListener("mouseleave", stopDelayInterval);
+
+  updateDelayButtons();
 </script>
 
 </html>
