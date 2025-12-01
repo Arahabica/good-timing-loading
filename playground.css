@@ -79,6 +79,11 @@ section {
   font-size: 14px;
 }
 
+button {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .hidden {
   display: none;
 }
@@ -167,21 +172,32 @@ fieldset button {
   background-color: transparent;
   color: #444444;
   cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
   transition: all 0.3s ease;
 }
 
-fieldset button:active {
-  transform: scale(1.15);
-}
 
 fieldset button svg {
   width: 12px;
   height: 12px;
 }
-fieldset button:hover {
-  background-color: #f0f0f0;
+
+@media (hover: hover) {
+  fieldset button:hover {
+    background-color: #f0f0f0;
+  }
+  fieldset button:active {
+    transform: scale(0.92);
+  }
+}
+
+@media (hover: none) {
+  fieldset button {
+    transition: all 0.6s ease;
+  }
+  fieldset button:active {
+    transform: scale(1.15);
+    background-color: #f0f0f0;
+  }
 }
 
 fieldset button:disabled {

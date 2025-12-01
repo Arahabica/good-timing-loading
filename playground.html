@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./playground.css?x=7" />
+  <link rel="stylesheet" href="./playground.css" />
   <title>Playground | Good Timing Loading</title>
 </head>
 
@@ -87,9 +87,7 @@
   <svg class="loading hidden" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
     <circle fill="none" stroke-width="4" cx="20" cy="20" r="18"></circle>
   </svg>
-  <svg class="normal-loading hidden" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-    <circle fill="none" stroke-width="4" cx="20" cy="20" r="18"></circle>
-  </svg>
+  <div class="normal-loading hidden"></div>
   <section class="content hidden">
     <div class="main">Hello</div>
     <div>loaded: <span class="loading-time"></span> ms</div>
@@ -257,22 +255,24 @@
     }
 
     upButton.addEventListener("click", increment);
-    upButton.addEventListener("mousedown", () => {
+    upButton.addEventListener("pointerdown", () => {
       timeoutId = setTimeout(() => {
         intervalId = setInterval(increment, 50);
       }, 380);
     });
-    upButton.addEventListener("mouseup", stopInterval);
-    upButton.addEventListener("mouseleave", stopInterval);
+    upButton.addEventListener("pointerup", stopInterval);
+    upButton.addEventListener("pointerleave", stopInterval);
+    upButton.addEventListener("pointercancel", stopInterval);
 
     downButton.addEventListener("click", decrement);
-    downButton.addEventListener("mousedown", () => {
+    downButton.addEventListener("pointerdown", () => {
       timeoutId = setTimeout(() => {
         intervalId = setInterval(decrement, 50);
       }, 380);
     });
-    downButton.addEventListener("mouseup", stopInterval);
-    downButton.addEventListener("mouseleave", stopInterval);
+    downButton.addEventListener("pointerup", stopInterval);
+    downButton.addEventListener("pointerleave", stopInterval);
+    downButton.addEventListener("pointercancel", stopInterval);
 
     updateButtons();
   }
