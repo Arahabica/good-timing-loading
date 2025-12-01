@@ -1,65 +1,63 @@
 <html>
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="./playground.css" />
   <title>Playground | Good Timing Loading</title>
 </head>
-
 <body>
   <section class="landing">
     <fieldset>
       <div class="title">処理時間</div>
       <div class="value">
-        <span id="progressTimeValue">500</span>
+        <span id="progress-time-value">500</span>
         <span>ms</span>
       </div>
       <div class="controls">
-        <button id="progressTimeDown">
+        <button id="progress-time-down">
           <svg viewBox="0 0 40 40">
             <path d="M0 8 L20 32 L40 8" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
         </button>
-        <button id="progressTimeUp">
+        <button id="progress-time-up">
           <svg viewBox="0 0 40 40">
             <path d="M0 32 L20 8 L40 32" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
         </button>
       </div>
     </fieldset>
-    <fieldset>
+    <fieldset class="delay-field">
       <div class="title">delay</div>
       <div class="value">
-        <span id="delayValue">350</span>
+        <span id="delay-value">350</span>
         <span>ms</span>
       </div>
       <div class="controls">
-        <button id="delayDown">
+        <button id="delay-down">
           <svg viewBox="0 0 40 40">
             <path d="M0 8 L20 32 L40 8" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
         </button>
-        <button id="delayUp">
+        <button id="delay-up">
           <svg viewBox="0 0 40 40">
             <path d="M0 32 L20 8 L40 32" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
         </button>
       </div>
     </fieldset>
-    <fieldset>
+    <fieldset class="min-duration-field">
       <div class="title">minDuration</div>
       <div class="value">
-        <span id="minDurationValue">600</span>
+        <span id="min-duration-value">600</span>
         <span>ms</span>
       </div>
       <div class="controls">
-        <button id="minDurationDown">
+        <button id="min-duration-down">
           <svg viewBox="0 0 40 40">
             <path d="M0 8 L20 32 L40 8" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
         </button>
-        <button id="minDurationUp">
+        <button id="min-duration-up">
           <svg viewBox="0 0 40 40">
             <path d="M0 32 L21 7 L40 32" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
@@ -69,10 +67,10 @@
     <fieldset>
       <div class="title">ちらつき対策</div>
       <div class="value">
-        <span id="flickerAgainstValue">ON</span>
+        <span id="flicker-against-value">ON</span>
       </div>
       <div class="controls">
-        <button id="flickerAgainst" class="check">
+        <button id="flicker-against" class="check">
           <svg viewBox="0 0 40 40">
             <path d="M0 9 L12 30 L40 4" stroke="currentColor" fill="none" stroke-width="3" />
           </svg>
@@ -161,6 +159,7 @@
 
   const landing = document.querySelector(".landing");
   const loading = document.querySelector(".loading");
+  const normalLoading = document.querySelector(".normal-loading");
   const content = document.querySelector(".content");
   const errorContent = document.querySelector(".error-content");
   const nextButton = document.querySelector(".next");
@@ -176,6 +175,7 @@
   function setState(state) {
     setHidden(landing, state !== "none");
     setHidden(loading, state !== "loading");
+    setHidden(normalLoading, state !== "normal-loading");
     setHidden(content, state !== "loaded");
     setHidden(errorContent, state !== "error");
   }
@@ -192,6 +192,17 @@
   }
 
   nextButton.addEventListener("click", async () => {
+    if (!flickerAgainst) {
+      setState("normal-loading");
+      try {
+          await doSomething();
+          content.querySelector(".loading-time").textContent = progressTime.toFixed(0);
+          setState("loaded");
+        } catch (error) {
+          setState("error");
+      }
+      return;
+    }
     setState("loading");
     try {
       await waitLoadingAnimation(() => doSomething(), { delay, minDuration });
@@ -279,9 +290,9 @@
 
   // progressTime controls
   setupNumberControl({
-    upButton: document.getElementById("progressTimeUp"),
-    downButton: document.getElementById("progressTimeDown"),
-    valueElement: document.getElementById("progressTimeValue"),
+    upButton: document.getElementById("progress-time-up"),
+    downButton: document.getElementById("progress-time-down"),
+    valueElement: document.getElementById("progress-time-value"),
     getValue: () => progressTime,
     setValue: (v) => { progressTime = v; },
     min: 0,
@@ -291,9 +302,9 @@
 
   // delay controls
   setupNumberControl({
-    upButton: document.getElementById("delayUp"),
-    downButton: document.getElementById("delayDown"),
-    valueElement: document.getElementById("delayValue"),
+    upButton: document.getElementById("delay-up"),
+    downButton: document.getElementById("delay-down"),
+    valueElement: document.getElementById("delay-value"),
     getValue: () => delay,
     setValue: (v) => {
       delay = v;
@@ -312,9 +323,9 @@
 
   // minDuration controls
   setupNumberControl({
-    upButton: document.getElementById("minDurationUp"),
-    downButton: document.getElementById("minDurationDown"),
-    valueElement: document.getElementById("minDurationValue"),
+    upButton: document.getElementById("min-duration-up"),
+    downButton: document.getElementById("min-duration-down"),
+    valueElement: document.getElementById("min-duration-value"),
     getValue: () => minDuration,
     setValue: (v) => { minDuration = v; },
     min: 0,
@@ -322,12 +333,13 @@
     step: 50
   });
 
-  const flickerAgainstButton = document.getElementById("flickerAgainst");
-  const flickerAgainstValue = document.getElementById("flickerAgainstValue");
+  const flickerAgainstButton = document.getElementById("flicker-against");
+  const flickerAgainstValue = document.getElementById("flicker-against-value");
   flickerAgainstButton.addEventListener("click", () => {
     flickerAgainst = !flickerAgainst;
     flickerAgainstValue.textContent = flickerAgainst ? "ON" : "OFF";
     flickerAgainstButton.classList.toggle("off", !flickerAgainst);
+    document.body.classList.toggle("normal", !flickerAgainst);
   });
 </script>
 
