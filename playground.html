@@ -212,65 +212,109 @@
     });
   });
 
+  function setupNumberControl(config) {
+    const {
+      upButton,
+      downButton,
+      valueElement,
+      getValue,
+      setValue,
+      min,
+      max,
+      step } = config;
+    let intervalId = null;
+    let timeoutId = null;
+
+    function updateButtons() {
+      upButton.disabled = getValue() >= max;
+      downButton.disabled = getValue() <= min;
+    }
+
+    function increment() {
+      const current = getValue();
+      if (current < max) {
+        setValue(Math.min(current + step, max));
+        valueElement.textContent = getValue();
+        updateButtons();
+      }
+    }
+
+    function decrement() {
+      const current = getValue();
+      if (current > min) {
+        setValue(Math.max(current - step, min));
+        valueElement.textContent = getValue();
+        updateButtons();
+      }
+    }
+
+    function stopInterval() {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+
+    upButton.addEventListener("click", increment);
+    upButton.addEventListener("mousedown", () => {
+      timeoutId = setTimeout(() => {
+        intervalId = setInterval(increment, 50);
+      }, 380);
+    });
+    upButton.addEventListener("mouseup", stopInterval);
+    upButton.addEventListener("mouseleave", stopInterval);
+
+    downButton.addEventListener("click", decrement);
+    downButton.addEventListener("mousedown", () => {
+      timeoutId = setTimeout(() => {
+        intervalId = setInterval(decrement, 50);
+      }, 380);
+    });
+    downButton.addEventListener("mouseup", stopInterval);
+    downButton.addEventListener("mouseleave", stopInterval);
+
+    updateButtons();
+  }
+
+  // progressTime controls
+  setupNumberControl({
+    upButton: document.getElementById("progressTimeUp"),
+    downButton: document.getElementById("progressTimeDown"),
+    valueElement: document.getElementById("progressTimeValue"),
+    getValue: () => progressTime,
+    setValue: (v) => { progressTime = v; },
+    min: 0,
+    max: 5000,
+    step: 50
+  });
+
   // delay controls
-  const delayUp = document.getElementById("delayUp");
-  const delayDown = document.getElementById("delayDown");
-  const delayValueEl = document.getElementById("delayValue");
-  let delayIntervalId = null;
-
-  function updateDelayButtons() {
-    delayUp.disabled = delay >= 5000;
-    delayDown.disabled = delay <= 0;
-  }
-
-  function incrementDelay() {
-    if (delay < 5000) {
-      delay = Math.min(delay + 50, 5000);
-      delayValueEl.textContent = delay;
-      updateDelayButtons();
-    }
-  }
-
-  function decrementDelay() {
-    if (delay > 0) {
-      delay = Math.max(delay - 50, 0);
-      delayValueEl.textContent = delay;
-      updateDelayButtons();
-    }
-  }
-
-  let delayTimeoutId = null;
-
-  function stopDelayInterval() {
-    if (delayTimeoutId) {
-      clearTimeout(delayTimeoutId);
-      delayTimeoutId = null;
-    }
-    if (delayIntervalId) {
-      clearInterval(delayIntervalId);
-      delayIntervalId = null;
-    }
-  }
-
-  delayUp.addEventListener("click", incrementDelay);
-  delayUp.addEventListener("mousedown", () => {
-    delayTimeoutId = setTimeout(() => {
-      delayIntervalId = setInterval(incrementDelay, 50);
-    }, 350);
+  setupNumberControl({
+    upButton: document.getElementById("delayUp"),
+    downButton: document.getElementById("delayDown"),
+    valueElement: document.getElementById("delayValue"),
+    getValue: () => delay,
+    setValue: (v) => { delay = v; },
+    min: 0,
+    max: 5000,
+    step: 50
   });
-  delayUp.addEventListener("mouseup", stopDelayInterval);
-  delayUp.addEventListener("mouseleave", stopDelayInterval);
 
-  delayDown.addEventListener("click", decrementDelay);
-  delayDown.addEventListener("mousedown", () => {
-    delayTimeoutId = setTimeout(() => {
-      delayIntervalId = setInterval(decrementDelay, 50);
-    }, 350);
+  // minTime controls
+  setupNumberControl({
+    upButton: document.getElementById("minTimeUp"),
+    downButton: document.getElementById("minTimeDown"),
+    valueElement: document.getElementById("minTimeValue"),
+    getValue: () => minTime,
+    setValue: (v) => { minTime = v; },
+    min: 0,
+    max: 5000,
+    step: 50
   });
-  delayDown.addEventListener("mouseup", stopDelayInterval);
-  delayDown.addEventListener("mouseleave", stopDelayInterval);
-
-  updateDelayButtons();
 </script>
 
 </html>
