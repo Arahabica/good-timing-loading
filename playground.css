@@ -1,0 +1,44 @@
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+fieldset {
+  display: flex;
+  gap: 4px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+fieldset .title {
+  width: 90px;
+}
+fieldset .controls {
+  margin-left: 12px;
+}
+
+
+fieldset button {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  width: 24px;
+  height: 18px;
+  border-radius: 12px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+fieldset button svg {
+  width: 12px;
+  height: 12px;
+}
+
+.controls {
+  display: flex;
+}

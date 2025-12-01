@@ -1,19 +1,73 @@
 <html>
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="./index.css" />
-  <title>Good Timing Loading</title>
+  <link rel="stylesheet" href="./playground.css" />
+  <title>Playground | Good Timing Loading</title>
 </head>
+
 <body>
   <section class="landing">
+    <fieldset>
+      <div class="title">処理時間</div>
+      <span id="progressTimeValue">500</span>
+      <span>ms</span>
+      <div class="controls">
+        <button id="progressTimeUp">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 32 L20 8 L40 32" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+        <button id="progressTimeDown">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 8 L20 32 L40 8" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="title">delay</div>
+      <span id="delayValue">350</span>
+      <span>ms</span>
+      <div class="controls">
+        <button id="delayUp">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 32 L20 8 L40 32" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+        <button id="delayDown">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 8 L20 32 L40 8" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="title">minTime</div>
+      <span id="minTimeValue">600</span>
+      <span>ms</span>
+      <div class="controls">
+        <button id="minTimeUp">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 32 L20 8 L40 32" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+        <button id="minTimeDown">
+          <svg viewBox="0 0 40 40">
+            <path d="M0 8 L20 32 L40 8" stroke="#444444" fill="none" stroke-width="3" />
+          </svg>
+        </button>
+      </div>
+    </fieldset>
     <button class="next">次へ</button>
     <div style="margin-top: 60px;">
-      <a href="./playground.html">Playground</a>
+      <a href="./index.html">Simple</a>
     </div>
   </section>
   <svg class="loading hidden" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-      <circle fill="none" stroke-width="4" cx="20" cy="20" r="18"></circle>
+    <circle fill="none" stroke-width="4" cx="20" cy="20" r="18"></circle>
   </svg>
   <section class="content hidden">
     <div class="main">Hello</div>
@@ -22,6 +76,7 @@
   </section>
   <section class="error-content hidden">
     <div class="error-message">Something went wrong!</div>
+    <div>loaded: <span class="loading-time"></span> ms</div>
     <button class="reset">リセット</button>
   </section>
 </body>
@@ -80,6 +135,10 @@
     }
   };
 
+  let progressTime = 500;
+  let delay = 350;
+  let minTime = 600;
+
   const landing = document.querySelector(".landing");
   const loading = document.querySelector(".loading");
   const content = document.querySelector(".content");
@@ -89,28 +148,28 @@
 
   function setHidden(element, hidden) {
     if (hidden) {
-        element.classList.add("hidden");
+      element.classList.add("hidden");
     } else {
-        element.classList.remove("hidden");
+      element.classList.remove("hidden");
     }
   }
-  function setState(state) {
-    setHidden(landing, state !== "none");
-    setHidden(loading, state !== "loading");
-    setHidden(content, state !== "loaded");
-    setHidden(errorContent, state !== "error");
+  function setState(mode) {
+    setHidden(landing, mode !== "none");
+    setHidden(loading, mode !== "loading");
+    setHidden(content, mode !== "loaded");
+    setHidden(errorContent, mode !== "error");
   }
   async function doSomething() {
-    // 200〜1200msの間でランダムに待機
-    const duration = 200 + Math.floor(20 * Math.random()) * 50;
+    // 0〜1200msの間でランダムに待機
+    const duration = Math.floor(24 * Math.random()) * 50;
     return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (Math.random() < 0.2) {
-              // 20%の確率でエラーをスロー
-              reject(new Error("Something went wrong!"));
-          }
-          resolve(duration);
-        }, duration);
+      setTimeout(() => {
+        if (Math.random() < 0.2) {
+          // 20%の確率でエラーをスロー
+          reject(new Error("Something went wrong!"));
+        }
+        resolve(duration);
+      }, duration);
     });
   }
 
@@ -121,14 +180,14 @@
       content.querySelector(".loading-time").textContent = duration.toFixed(0);
       setState("loaded");
     } catch (error) {
-        setState("error");
-        return;
+      setState("error");
     }
   });
   resetButton.forEach(button => {
     button.addEventListener("click", () => {
-        setState("none");
+      setState("none");
     });
   });
 </script>
+
 </html>
