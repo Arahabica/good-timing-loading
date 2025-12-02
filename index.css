@@ -65,6 +65,13 @@ body {
   justify-content: center;
 }
 
+h1 {
+  font-weight: 200;
+  font-family: serif;
+  margin-bottom: 40px;
+}
+
+
 section {
   text-align: center;
   font-size: 14px;
@@ -83,6 +90,7 @@ button.next {
   background-color: #2860d8;
   color: #ffffff;
   cursor: pointer;
+  width: 100%;
 }
 
 button.reset {
