@@ -20,10 +20,19 @@
   transform-origin: center;
   stroke: #2860d8;
   animation:
-    spin-fade-in 0.4s ease-in-out,
+    spin-hidden 0.35s ease-in-out,
+    spin-fade-in 0.05s ease-in-out 0.35s forwards,
     spin-dash 1.6s ease-in-out 0.35s infinite;
 }
+@keyframes spin-hidden {
+  0% {
+    opacity: 0;
+  }
 
+  100% {
+    opacity: 0;
+  }
+}
 @keyframes spin-fade-in {
   0% {
     opacity: 0;
@@ -71,10 +80,14 @@ h1 {
   margin-bottom: 40px;
 }
 
-
 section {
   text-align: center;
   font-size: 14px;
+}
+
+button {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .hidden {
@@ -116,4 +129,116 @@ button.reset {
 .error-content .error-message {
   font-size: 24px;
   color: red;
+}
+
+
+section.hidden {
+  display: none;
+}
+
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+fieldset {
+  display: flex;
+  gap: 4px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+fieldset .title {
+  width: 100px;
+  text-align: right;
+}
+fieldset .value {
+  width: 75px;
+  text-align: right;
+}
+fieldset .controls {
+  display: flex;
+  width: 100px;
+  gap: 4px;
+  justify-content: end;
+}
+
+
+fieldset button {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: transparent;
+  color: #444444;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+fieldset button svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (hover: hover) {
+  fieldset button:hover {
+    background-color: #f0f0f0;
+  }
+  fieldset button:active {
+    transform: scale(0.92);
+  }
+}
+
+@media (hover: none) {
+  fieldset button {
+    transition: all 0.6s ease;
+  }
+  fieldset button:active {
+    transform: scale(1.15);
+    background-color: #f0f0f0;
+  }
+}
+
+fieldset button:disabled {
+  color: #dadada;
+}
+
+button.check svg {
+  color: #444444;
+}
+
+button.check.off svg {
+  color: #bababa;
+}
+
+.normal-loading {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #2860d8;
+  border-top-color: transparent;
+  animation:
+    rotatation 1s linear infinite;
+}
+
+.normal .delay-field, .normal .min-duration-field {
+  opacity: 0.3;
+}
+
+@keyframes rotatation {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

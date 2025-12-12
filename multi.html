@@ -2,8 +2,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./playground.css" />
-  <title>Loading Multi Simulation</title>
+  <link rel="stylesheet" href="./index.css" />
+  <title>Loading Simulation (Multiple)</title>
   <style>
     main {
       display: flex;
@@ -30,9 +30,27 @@
       min-width: 140px;
       width: 140px;
     }
+    @media screen and (max-width: 480px) {
+      main {
+        gap: 4px;
+        width: 100%;
+        padding: 8px;
+      }
+      .container {
+        padding: 8px;
+        width: 100px;
+        height: 100px;
+      }
+      main button.next {
+        min-width: 96px;
+        width: 96px;
+        padding: 4px 8px;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- <h1>Loading Simulation<br/>(Multiple)</h1> -->
   <main>
     <div class="container" data-process="100">
       <section class="landing">
