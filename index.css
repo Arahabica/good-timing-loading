@@ -25,8 +25,8 @@
   transform-origin: center;
   stroke: var(--loading-color);
   animation:
-    spin-hidden var(--loading-delay) ease-in-out,
-    spin-fade-in 0.1s ease-in-out var(--loading-delay) forwards,
+    spin-hidden var(--loading-delay),
+    spin-fade-in 0.15s ease-out var(--loading-delay) forwards,
     spin-dash 1.6s ease-in-out var(--loading-delay) infinite;
 }
 /* 遅延を実現するための何も表示しないアニメーション */
