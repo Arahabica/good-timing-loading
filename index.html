@@ -17,7 +17,7 @@
   <meta name="twitter:creator" content="@Arahabica1" />
   <link rel="shortcut icon" href="./favicon.ico">
   <link rel="stylesheet" href="./index.css" />
-  <title>Loading Simulation</title>
+  <title>ローディングシミュレーター</title>
 </head>
 <body>
   <section class="landing">
@@ -121,8 +121,8 @@
 <script>
   const waitLoadingAnimation = async (callback, opts) => {
     const delay = opts?.delay ?? 350; // ドーハティ閾値(400ms) - バッファ(50ms)
-    const minDuration = opts?.minDuration ?? 600; // 最小表示時間
-    // Delayを超えた場合に強制される合計の最小待ち時間
+    const minDuration = opts?.minDuration ?? 600; // 最低表示時間
+    // Delayを超えた場合に強制される合計の最低待ち時間
     const requiredWaitTime = delay + minDuration; // 950ms
 
     const startTime = Date.now();
