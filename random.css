@@ -87,6 +87,7 @@ h1 {
 section {
   text-align: center;
   font-size: 14px;
+  width: 300px;
 }
 
 section, svg.loading {
@@ -132,4 +133,24 @@ button.reset {
 .error-content .error-message {
   font-size: 24px;
   color: red;
+}
+
+.links {
+  width: 100%;
+  font-family: serif;
+  margin-top: 60px;
+}
+
+.links h2 {
+  text-align: left;
+}
+
+.links ul {
+  text-align: left;
+  list-style: none;
+  padding-left: 0;
+}
+
+.links ul li {
+  margin-bottom: 8px;
 }

@@ -15,6 +15,9 @@
       width: 600px;
       height: 600px;
     }
+    section {
+      width: 100%;
+    }
     .container {
       padding: 20px;
       width: 140px;
@@ -51,6 +54,12 @@
         min-width: 96px;
         width: 96px;
         padding: 4px 8px;
+      }
+    }
+    @media screen and (max-width: 700px) {
+      .links {
+        max-width: 336px;
+        margin-top: 60px;
       }
     }
   </style>
@@ -176,6 +185,14 @@
       </section>
     </div>
   </main>
+  <div class="links">
+    <h2>Demos</h2>
+    <ul>
+      <li><a href="./">Loading Simulation</a></li>
+      <li><a href="./random.html">Loading Simulation (Random)</a></li>
+      <li>Loading Simulation (Multi)</li>
+    </ul>
+  </div>
 </body>
 <script>
   const waitLoadingAnimation = async (callback, opts) => {

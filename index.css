@@ -89,6 +89,7 @@ h1 {
 section {
   text-align: center;
   font-size: 14px;
+  width: 300px;
 }
 section, svg.loading, .normal-loading {
   margin: auto 0;
@@ -250,4 +251,24 @@ button.check.off svg {
   to {
     transform: rotate(360deg);
   }
+}
+
+.links {
+  width: 100%;
+  max-width: 520px;
+  font-family: serif;
+}
+
+.links h2 {
+  text-align: left;
+}
+
+.links ul {
+  text-align: left;
+  list-style: none;
+  padding-left: 0;
+}
+
+.links ul li {
+  margin-bottom: 8px;
 }
