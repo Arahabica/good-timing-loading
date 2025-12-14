@@ -1,7 +1,12 @@
+:root {
+  --loading-delay: 350ms;
+  --loading-color: #2860d8;
+  --primary-color: #2860d8;
+}
 .loading {
   width: 40px;
   height: 40px;
-  animation: rotator 1.6s linear 0.35s infinite;
+  animation: rotator 1.6s linear var(--loading-delay) infinite;
 }
 
 @keyframes rotator {
@@ -18,12 +23,13 @@
   stroke-dasharray: 114;
   stroke-dashoffset: 0;
   transform-origin: center;
-  stroke: #2860d8;
+  stroke: var(--loading-color);
   animation:
-    spin-hidden 0.35s ease-in-out,
-    spin-fade-in 0.05s ease-in-out 0.35s forwards,
-    spin-dash 1.6s ease-in-out 0.35s infinite;
+    spin-hidden var(--loading-delay) ease-in-out,
+    spin-fade-in 0.1s ease-in-out var(--loading-delay) forwards,
+    spin-dash 1.6s ease-in-out var(--loading-delay) infinite;
 }
+/* 遅延を実現するための何も表示しないアニメーション */
 @keyframes spin-hidden {
   0% {
     opacity: 0;
@@ -38,15 +44,11 @@
     opacity: 0;
   }
 
-  87.5% {
-    opacity: 0;
-  }
-
   100% {
     opacity: 1;
   }
 }
-
+/* スピナーの円弧の長さを伸び縮みさせるアニメーション */
 @keyframes spin-dash {
   0% {
     stroke-dashoffset: 111;
@@ -107,7 +109,7 @@ button.next {
   min-width: 160px;
   border-radius: 6px;
   border: none;
-  background-color: #2860d8;
+  background-color: var(--primary-color);
   color: #ffffff;
   cursor: pointer;
   width: 100%;
@@ -120,7 +122,7 @@ button.reset {
   border-radius: 6px;
   border: none;
   background-color: transparent;
-  color: #2860d8;
+  color: var(--primary-color);
   cursor: pointer;
   text-decoration: underline;
 }
@@ -230,7 +232,7 @@ button.check.off svg {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 3px solid #2860d8;
+  border: 3px solid var(--loading-color);
   border-top-color: transparent;
   animation:
     rotatation 1s linear infinite;

@@ -310,13 +310,7 @@
     getValue: () => delay,
     setValue: (v) => {
       delay = v;
-      loading.style.animation = `rotator 1.6s linear ${delay}ms infinite`;
-      const circle = loading.querySelector("circle");
-      circle.style.animation = `
-        spin-hidden ${delay}ms ease-in-out,
-        spin-fade-in 0.05s ease-in-out ${delay}ms forwards,
-        spin-dash 1.6s ease-in-out ${delay}ms infinite
-      `;
+      document.documentElement.style.setProperty('--loading-delay', `${delay}ms`);
     },
     min: 0,
     max: 5000,
